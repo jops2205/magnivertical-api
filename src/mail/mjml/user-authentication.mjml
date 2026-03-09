@@ -1,0 +1,32 @@
+<mjml>
+  <mj-head>
+    <mj-title>Aceda à sua conta com o link de login</mj-title>
+    <mj-preview>O seu link de acesso está pronto — clique para entrar</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.2" />
+      <mj-button background-color="#09090B" color="#ffffff" font-size="14px" font-weight="600" padding="14px 24px" border-radius="6px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f0f0f0">
+    <mj-section background-color="#ffffff" padding="32px" border-radius="12px">
+      <mj-column>
+        <mj-text font-size="20px" font-weight="600" align="center">
+          Inicie sessão de forma segura
+        </mj-text>
+        <mj-text align="center">
+          Clique no botão abaixo para entrar diretamente na sua conta.
+        </mj-text>
+        <mj-button href="{{ url }}" background-color="#323F8E">
+          Entrar na conta
+        </mj-button>
+        <mj-text align="center" font-size="12px" color="#666666">
+          Ao confirmar este pedido, estará a aceder à conta associada a <strong>{{ email }}</strong>.
+        </mj-text>
+        <mj-text align="center" font-size="12px" color="#666666">
+          Este link é válido por 10 minutos.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

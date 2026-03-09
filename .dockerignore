@@ -1,0 +1,9 @@
+# deps
+/node_modules
+
+# version control
+.git
+.gitignore
+
+# build
+/dist

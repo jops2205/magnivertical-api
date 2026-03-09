@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "node20",
+		"removeComments": true,
+		"lib": ["ES2023"],
+		"target": "es2023",
+		"incremental": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"skipLibCheck": true
+	}
+}

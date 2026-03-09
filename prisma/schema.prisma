@@ -1,0 +1,267 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/database/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MANAGER
+  ASSISTANT
+  OPERATOR
+
+  @@map("user_role")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String   @unique
+  verified  Boolean  @default(false)
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tasks         Task[]         @relation("CreatorToTask")
+  assignments   Task[]         @relation("ExecutorToTask")
+  budgets       Budget[]
+  followUps     FollowUp[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+  CANCELED
+
+  @@map("task_status")
+}
+
+enum TaskPriority {
+  HIGH
+  MEDIUM
+  LOW
+
+  @@map("task_priority")
+}
+
+model Task {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority
+  scheduledAt DateTime     @map("scheduled_at")
+  startedAt   DateTime?    @map("started_at")
+  completedAt DateTime?    @map("completed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  creatorId   String       @map("creator_id") @db.Uuid
+  executorId  String?      @map("executor_id") @db.Uuid
+
+  creator       User           @relation("CreatorToTask", fields: [creatorId], references: [id], onDelete: Cascade)
+  executor      User?          @relation("ExecutorToTask", fields: [executorId], references: [id], onDelete: SetNull)
+  notifications Notification[]
+
+  @@map("tasks")
+}
+
+enum District {
+  ACORES
+  AVEIRO
+  BEJA
+  BRAGA
+  BRAGANCA
+  CASTELO_BRANCO
+  COIMBRA
+  EVORA
+  FARO
+  GUARDA
+  LEIRIA
+  LISBOA
+  MADEIRA
+  PORTALEGRE
+  PORTO
+  SANTAREM
+  SETUBAL
+  VIANA_DO_CASTELO
+  VILA_REAL
+  VISEU
+
+  @@map("district")
+}
+
+model Address {
+  id         String   @id @default(uuid()) @db.Uuid
+  street     String
+  postalCode String   @map("postal_code")
+  complement String?
+  district   District
+
+  customer Customer?
+  project  Project?
+
+  @@map("addresses")
+}
+
+enum CustomerType {
+  BUSINESS
+  INDIVIDUAL
+
+  @@map("customer_type")
+}
+
+model Customer {
+  id        String       @id @default(uuid()) @db.Uuid
+  name      String
+  email     String       @unique
+  taxpayer  String       @unique
+  phone     String       @unique
+  type      CustomerType
+  createdAt DateTime     @default(now()) @map("created_at")
+  addressId String       @unique @map("address_id") @db.Uuid
+
+  address  Address   @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  projects Project[]
+
+  @@map("customers")
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+
+  @@map("project_status")
+}
+
+model Project {
+  id         String        @id @default(uuid()) @db.Uuid
+  name       String
+  code       String        @unique
+  status     ProjectStatus @default(PLANNED)
+  startedAt  DateTime      @default(now()) @map("started_at")
+  endedAt    DateTime?     @map("ended_at")
+  customerId String?       @map("customer_id") @db.Uuid
+  addressId  String        @unique @map("address_id") @db.Uuid
+
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  address  Address   @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  budgets  Budget[]
+
+  @@map("projects")
+}
+
+enum BudgetStatus {
+  DRAFT
+  SENT
+  UNDER_REVIEW
+  NOT_REQUESTED
+  REQUESTED
+  IN_PRODUCTION
+  PENDING_COMPLETION
+  COMPLETED
+
+  @@map("budget_status")
+}
+
+model Budget {
+  id                 String       @id @default(uuid()) @db.Uuid
+  name               String
+  status             BudgetStatus @default(DRAFT)
+  percentageDiscount Int          @map("percentage_discount")
+  attachmentsUrl     String       @map("attachments_url")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  userId             String?      @map("user_id") @db.Uuid
+  projectId          String       @map("project_id") @db.Uuid
+
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items     BudgetItem[]
+  followUps FollowUp[]
+
+  @@map("budgets")
+}
+
+enum BudgetItemType {
+  ALUMINUM
+  IRON
+  GLASS
+  INOX
+  COMPOSITE
+  SHEET
+
+  @@map("budget_item_type")
+}
+
+model BudgetItem {
+  id       String         @id @default(uuid()) @db.Uuid
+  name     String
+  price    Int
+  quantity Int
+  type     BudgetItemType
+  budgetId String         @map("budget_id") @db.Uuid
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
+  @@map("budget_items")
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  CLOSED
+
+  @@map("follow_up_status")
+}
+
+model FollowUp {
+  id          String         @id @default(uuid()) @db.Uuid
+  description String?
+  status      FollowUpStatus @default(PENDING)
+  scheduledAt DateTime       @map("scheduled_at")
+  resolvedAt  DateTime?      @map("resolved_at")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  userId      String?        @map("user_id") @db.Uuid
+  budgetId    String         @map("budget_id") @db.Uuid
+
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  budget        Budget         @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@map("follow_ups")
+}
+
+enum NotificationType {
+  TASK
+  FOLLOW_UP
+
+  @@map("notification_type")
+}
+
+model Notification {
+  id          String           @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  type        NotificationType
+  read        Boolean          @default(false)
+  readAt      DateTime?        @map("read_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  userId      String           @map("user_id") @db.Uuid
+  taskId      String?          @map("task_id") @db.Uuid
+  followUpId  String?          @map("follow_up_id") @db.Uuid
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task     Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  followUp FollowUp? @relation(fields: [followUpId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, taskId])
+  @@unique([userId, followUpId])
+  @@map("notifications")
+}

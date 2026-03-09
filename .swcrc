@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "jsc": {
+    "target": "es2023",
+    "baseUrl": "./",
+    "keepClassNames": true,
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": false,
+      "dynamicImport": false
+    }
+  },
+  "minify": true,
+  "module": {
+    "type": "commonjs"
+  }
+}

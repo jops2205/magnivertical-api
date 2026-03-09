@@ -1,0 +1,38 @@
+<mjml>
+  <mj-head>
+    <mj-title>Confirme o seu endereço de e-mail e aceda à sua conta</mj-title>
+    <mj-preview>A sua palavra-passe foi gerada — confirme o seu endereço de e-mail para começar</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+      <mj-text font-size="14px" color="#333333" line-height="1.2" />
+      <mj-button background-color="#09090B" color="#ffffff" font-size="14px" font-weight="600" padding="14px 24px" border-radius="6px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f0f0f0">
+    <mj-section background-color="#ffffff" padding="32px" border-radius="12px">
+      <mj-column>
+        <mj-text font-size="20px" font-weight="600" align="center">
+          Bem-vindo! Só falta um passo
+        </mj-text>
+        <mj-text align="center">
+          Criamos uma palavra-passe para que possa aceder à sua conta:
+        </mj-text>
+        <mj-text align="center" font-size="16px" font-weight="600">
+          {{ password }}
+        </mj-text>
+        <mj-text align="center">
+          Para ativar a sua conta, confirme o seu endereço de e-mail clicando no botão abaixo.
+        </mj-text>
+        <mj-button href="{{ url }}" background-color="#323F8E">
+          Confirmar e-mail
+        </mj-button>
+        <mj-text align="center" font-size="12px" color="#666666">
+          Ao confirmar este pedido, o endereço <strong>{{ email }}</strong> será verificado.
+        </mj-text>
+        <mj-text align="center" font-size="12px" color="#666666">
+          Este link é válido por 10 minutos.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
