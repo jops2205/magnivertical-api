@@ -35,7 +35,7 @@ export const requestAuthenticationController: FastifyPluginAsyncZod = async (
 				return response.code(HttpStatus.NOT_FOUND).send({
 					message: "Not found",
 					error:
-						"Não foi possível localizar uma conta associada a este endereço de email.",
+						"Não foi possível localizar uma conta associada a este endereço de e-mail.",
 					statusCode: HttpStatus.NOT_FOUND,
 				});
 			}

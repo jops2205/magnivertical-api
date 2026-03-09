@@ -47,7 +47,7 @@ export const updateUserController: FastifyPluginAsyncZod = async (app) => {
 			if (isEmailUsed && user.id !== isEmailUsed.id) {
 				return response.code(HttpStatus.CONFLICT).send({
 					message: "Conflict",
-					error: `Este endereço de email já está em uso por ${isEmailUsed.name}.`,
+					error: `Este endereço de e-mail já está em uso por ${isEmailUsed.name}.`,
 					statusCode: HttpStatus.CONFLICT,
 				});
 			}
