@@ -3,10 +3,6 @@ import type { RangeWithoutMetrics } from "@/schemas/metrics/value-distribution-s
 export const RANGES: RangeWithoutMetrics[] = [
 	{
 		min: 0,
-		max: 100000,
-	},
-	{
-		min: 100000,
 		max: 500000,
 	},
 	{
@@ -19,5 +15,13 @@ export const RANGES: RangeWithoutMetrics[] = [
 	},
 	{
 		min: 5000000,
+		max: 10000000,
+	},
+	{
+		min: 10000000,
+		max: 20000000,
+	},
+	{
+		min: 20000000,
 	},
 ] as const;
